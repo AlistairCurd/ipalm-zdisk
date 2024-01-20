@@ -28,7 +28,7 @@ nm_per_px = 133.3
 
 # max localisation precision in x and y to include
 
-filter_params = {'loc_prec_xy_nm_max': 5}
+filter_params = {'loc_prec_xy_nm_max': 7}
 
 # ***Filter for Z error as well?***
 
@@ -49,7 +49,7 @@ import pandas as pd
 # Replace the string.
 
 # +
-locdatapath = 'C://Janelia_Z-disk_2024//240117-3_Run1-640_c123_sum_X11_processed_IDL_purged_IDL_beadsremoved_IDL_ASCII_xy-in-nm.txt.'
+locdatapath = 'C://Janelia_Z-disk_2024//240117-3_Run1-640_c123_sum_X11_processed_IDL_purged_IDL_beadsremoved_IDL_ASCII_xy-in-nm.txt'
 
 locdatapath = Path(locdatapath)
 # -
@@ -75,13 +75,13 @@ filter_params
 
 # ## Filter and select only XYZ columns
 
-locs_filtered_df = locs_df[(locs_df['Sigma X Pos rtNph'] < loc_prec_xy_nm_max) & (locs_df['Sigma Y Pos rtNph'] < loc_prec_xy_nm_max)]
+locs_filtered_df = locs_df[(locs_df['Sigma X Pos rtNph'] < filter_params['loc_prec_xy_nm_max']) & (locs_df['Sigma Y Pos rtNph'] < filter_params['loc_prec_xy_nm_max'])]
 locs_filtered_df = locs_filtered_df[['X Position', 'Y Position', 'Unwrapped Z', 'Sigma X Pos rtNph', 'Sigma Y Pos rtNph', 'Unwrapped Z Error']]
 locs_filtered_df
 
 locs_filtered_df['Sigma Y Pos rtNph'].max()
 
-locs_df['Sigma Y Pos rtNph'].max()
+locs_df['Sigma X Pos rtNph'].max()
 
 # ## Put XYZ coordinates in arrays for easy reference
 
@@ -97,8 +97,8 @@ z_nm = xyz_coords_nm[:, 2]
 # * bin-size (nm)
 # * max displayed histogram bin value (image saturation point)
 
-binsize = 200
-hist_im_sat_value = 3
+binsize = 100
+hist_im_sat_value = 50
 
 # ## min and max XYZ for reference while plotting
 
@@ -167,7 +167,7 @@ fig.colorbar(im, ax=ax)
 
 rotation_angle_degrees = 63
 
-# ## Do rotation
+# ## Rotate localisation data
 # The rotation happens about the (x = 0, y = 0) axis
 
 # +
@@ -196,5 +196,57 @@ counts, xedges, yedges, im = \
               vmin=0, vmax=hist_im_sat_value
               )
 fig.colorbar(im, ax=ax)
+
+# # Crop again
+
+# ## Set min and max x and y to use
+
+# +
+x_min = -30000
+x_max = 0
+
+y_min = 30000
+y_max = 34000
+# -
+
+# ## Get cropped data
+
+x_rotated_cropped = x_rotated[
+    (x_rotated > x_min) & (x_rotated < x_max)
+    & (y_rotated > y_min) & (y_rotated < y_max)
+    ]
+y_rotated_cropped = y_rotated[
+    (x_rotated > x_min) & (x_rotated < x_max)
+    & (y_rotated > y_min) & (y_rotated < y_max)
+    ]
+z_rotated_cropped = z_rotated[
+    (x_rotated > x_min) & (x_rotated < x_max)
+    & (y_rotated > y_min) & (y_rotated < y_max)
+    ]
+
+# ## Plot
+
+fig, ax = plt.subplots()
+ax.set_aspect(1)
+counts, xedges, yedges, im = \
+    ax.hist2d(x_rotated_cropped, y_rotated_cropped,
+              bins=[int(np.ceil(np.ptp(x_rotated_cropped) / binsize)), int(np.ceil(np.ptp(y_rotated_cropped) / binsize))],
+              cmap='inferno',
+              vmin=0, vmax=hist_im_sat_value
+              )
+fig.colorbar(im, ax=ax)
+
+# # Save
+
+xyz_rotated_cropped = np.vstack((x_rotated_cropped, y_rotated_cropped, z_rotated_cropped)).T
+
+x_rotated_cropped.shape
+
+xyz_rotated_cropped.shape
+
+outfilename = locdatapath.stem + '_MFalongX.csv'
+outpath = locdatapath.parent / outfilename
+
+np.savetxt(outpath, xyz_rotated_cropped, delimiter=',')
 
 
