@@ -1,0 +1,14 @@
+# Alistair Curd 19 January 2024
+# environment file for setting up conda environment
+
+name: ipalm-zdisk
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.10
+  - jupyter
+  - jupytext
+  - numpy
+  - matplotlib
+  - pandas
