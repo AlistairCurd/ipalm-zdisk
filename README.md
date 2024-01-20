@@ -39,7 +39,7 @@ Notebooks are paired with .py scripts using Jupytext, for convenient version con
 **Open the required .py script ending in "-notebook" with Jupyter.**
 Saving it will generate .ipynb notebooks with the same name. .gitignore is set to ignore the .ipynb files.
 
-If developing and switching between Git branches, work by using the .py versions of the notebooks in Jupyter that are version controlled. Jupytext enables this working well. Open as a notebook (from *Oprn With*), not in a code editor. 
+If developing and switching between Git branches, work by using the .py versions of the notebooks in Jupyter that are version controlled. Jupytext enables this working well. Open as a notebook (from *Open With* in Jupyter in some versions), not in a code editor. 
 
 Run the first cell that stops Jupyter autosaving, and save progress manually to do avoid accidental conflicts. If you checkout a different branch and open an .ipynb notebook, it will not have changed with the checkout - you need to open and save the .py version first, which does change with version control.
 
