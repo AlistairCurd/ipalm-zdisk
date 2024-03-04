@@ -16,7 +16,7 @@ Developed on Windows 10 in Python with Mamba, a cross-platform manager designed 
 3. In Miniforge Prompt (installed in the previous step):
 
   * Navigate to the cloned repository
-  * Input `mamba env create -f install\oni_environment.yml` (or `conda ...` with Miniconda or Anaconda).
+  * Input `mamba env create -f environment.yml` (or `conda ...` with Miniconda or Anaconda).
 
 This will create an environment called ipalm-zdisk with the required packages.
 
@@ -30,7 +30,7 @@ This will create an environment called ipalm-zdisk with the required packages.
 
 In Miniforge Prompt:
 
-* Input `mamba activate oni` (or `conda ...`)
+* Input `mamba activate ipalm-zdisk` (or `conda ...`)
 
 ## Notebooks
 
