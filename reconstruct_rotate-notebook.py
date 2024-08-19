@@ -6,7 +6,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.15.2
+#       jupytext_version: 1.16.1
 #   kernelspec:
 #     display_name: Python 3 (ipykernel)
 #     language: python
@@ -49,6 +49,7 @@ import pandas as pd
 # Replace the string.
 
 # +
+# locdatapath = 'C://Janelia_Z-disk_2024//240117-3_Run1-640_c123_sum_X11_processed_IDL_purged_IDL_beadsremoved_IDL_ASCII_xy-in-nm.txt'
 locdatapath = 'C://Janelia_Z-disk_2024//240117-3_Run1-640_c123_sum_X11_processed_IDL_purged_IDL_beadsremoved_IDL_ASCII_xy-in-nm.txt'
 
 locdatapath = Path(locdatapath)
@@ -97,8 +98,8 @@ z_nm = xyz_coords_nm[:, 2]
 # * bin-size (nm)
 # * max displayed histogram bin value (image saturation point)
 
-binsize = 100
-hist_im_sat_value = 50
+binsize = 50
+hist_im_sat_value = 15
 
 # ## min and max XYZ for reference while plotting
 
@@ -236,6 +237,18 @@ counts, xedges, yedges, im = \
               )
 fig.colorbar(im, ax=ax)
 
+# # Check XZ
+
+fig, ax = plt.subplots()
+ax.set_aspect(1)
+counts, xedges, yedges, im = \
+    ax.hist2d(x_rotated_cropped, z_rotated_cropped,
+              bins=[int(np.ceil(np.ptp(x_rotated_cropped) / binsize)), int(np.ceil(np.ptp(z_rotated_cropped) / binsize))],
+              cmap='inferno',
+              vmin=0, vmax=hist_im_sat_value
+              )
+fig.colorbar(im, ax=ax)
+
 # # Save
 
 xyz_rotated_cropped = np.vstack((x_rotated_cropped, y_rotated_cropped, z_rotated_cropped)).T
@@ -244,7 +257,7 @@ x_rotated_cropped.shape
 
 xyz_rotated_cropped.shape
 
-outfilename = locdatapath.stem + '_MFalongX.csv'
+outfilename = locdatapath.stem + '_MFalongX_prec5.csv'
 outpath = locdatapath.parent / outfilename
 
 np.savetxt(outpath, xyz_rotated_cropped, delimiter=',')
