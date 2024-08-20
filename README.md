@@ -3,6 +3,8 @@ Process Z-disk localisations from the Janelia iPALM
 
 Developed on Windows 10 in Python with Mamba, a cross-platform manager designed as a drop-in replacement for conda.
 
+Visualise, crop and rotate localisation distribution from iPALM data.
+
 ## Installation
 
 ### Environment
@@ -32,7 +34,14 @@ In Miniforge Prompt:
 
 * Input `mamba activate ipalm-zdisk` (or `conda ...`)
 
-## Notebooks
+## Usage
+
+* Navigate to the local copy of this repository.
+* Input `jupyter notebook`.
+* Open `reconstruct_rotate-notebook.py`. Open it as a notebook (sometimes *Open With...*), not in a code editor.
+* Run the first cell to prevent autosaving, which can cause conflicts with the paired notebooks that are created. Save manually if desired.
+
+## Developing notebooks
 
 Notebooks are paired with .py scripts using Jupytext, for convenient version control.
 
